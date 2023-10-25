@@ -292,13 +292,12 @@ namespace Text_Editor
         {
             try
             {
-                saveFileDialog1.ShowDialog();    // show the dialog
                 string file;
                 if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {
                     string filename = saveFileDialog1.FileName;
                     // save the contents of the rich text box
-                    richTextBox1.SaveFile(filename, RichTextBoxStreamType.PlainText);
+                    richTextBox1.SaveFile(filename, RichTextBoxStreamType.RichText);
                     file = Path.GetFileName(filename);    // get name of file
                     MessageBox.Show("File " + file + " was saved successfully.", "Save Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -312,12 +311,11 @@ namespace Text_Editor
 
         private void openFileStripButton_Click(object sender, EventArgs e)
         {
-            openFileDialog1.ShowDialog();     // show the dialog
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 filenamee = openFileDialog1.FileName;
                 // load the file into the richTextBox
-                richTextBox1.LoadFile(filenamee, RichTextBoxStreamType.PlainText);    // loads it in regular text format
+                richTextBox1.LoadFile(filenamee, RichTextBoxStreamType.RichText);    // loads it in regular text format
                 // richTextBox1.LoadFile(filename, RichTextBoxStreamType.RichText);    // loads it in RTB format
             }
         }
