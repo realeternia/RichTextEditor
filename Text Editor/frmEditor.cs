@@ -20,10 +20,8 @@ namespace Text_Editor
 {
     public partial class frmEditor : Form
     {
-        List<string> colorList = new List<string>();    // holds the System.Drawing.Color names
         string filenamee;    // file opened inside of RTB
-        const int MIDDLE = 382;    // middle sum of RGB - max is 765
-        int sumRGB;    // sum of the selected colors RGB
+
         int pos, line, column;    // for detecting line and column numbers
 
         public frmEditor()
@@ -33,9 +31,9 @@ namespace Text_Editor
 
         private void frmEditor_Load(object sender, EventArgs e)
         {
+            this.SuspendLayout();
             richTextBox1.AllowDrop = true;     // to allow drag and drop to the RichTextBox
             richTextBox1.AcceptsTab = true;    // allow tab
-            richTextBox1.WordWrap = false;    // disable word wrap on start
             richTextBox1.ShortcutsEnabled = true;    // allow shortcuts
             richTextBox1.DetectUrls = true;    // allow detect url
             fontDialog1.ShowColor = true;
@@ -49,14 +47,12 @@ namespace Text_Editor
             leftAlignStripButton.Checked = true;
             centerAlignStripButton.Checked = false;
             rightAlignStripButton.Checked = false;
-            boldStripButton3.Checked = false;
-            italicStripButton.Checked = false;
             rightAlignStripButton.Checked = false;
             bulletListStripButton.Checked = false;
-            wordWrapToolStripMenuItem.Image = null;
             MinimizeBox = false;
             MaximizeBox = false;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
+
 
             // fill zoomDropDownButton item list
             zoomDropDownButton.DropDown.Items.Add("20%");
@@ -68,85 +64,22 @@ namespace Text_Editor
             zoomDropDownButton.DropDown.Items.Add("300%");
             zoomDropDownButton.DropDown.Items.Add("400%");
             zoomDropDownButton.DropDown.Items.Add("500%");
-         
-            // fill font sizes in combo box
-            for (int i = 8; i < 80; i += 2)
-            {
-                fontSizeComboBox.Items.Add(i);
-            }
-
-            // fill colors in color drop down list
-            foreach (System.Reflection.PropertyInfo prop in typeof(Color).GetProperties())
-            {
-                if (prop.PropertyType.FullName == "System.Drawing.Color")
-                {
-                    colorList.Add(prop.Name);     
-                }
-            }
-           
-            // fill the drop down items list
-            foreach(string color in colorList)
-            {
-                colorStripDropDownButton.DropDownItems.Add(color);
-            }
-
-            // fill BackColor for each color in the DropDownItems list
-            for (int i = 0; i < colorStripDropDownButton.DropDownItems.Count; i++)
-            {
-                // Create KnownColor object
-                KnownColor selectedColor;
-                selectedColor = (KnownColor)System.Enum.Parse(typeof(KnownColor), colorList[i]);    // parse to a KnownColor
-                colorStripDropDownButton.DropDownItems[i].BackColor = Color.FromKnownColor(selectedColor);    // set the BackColor to its appropriate list item
-
-                // Set the text color depending on if the barkground is darker or lighter
-                // create Color object
-                Color col = Color.FromName(colorList[i]);
-
-                // 255,255,255 = White and 0,0,0 = Black
-                // Max sum of RGB values is 765 -> (255 + 255 + 255)
-                // Middle sum of RGB values is 382 -> (765/2)
-                // Color is considered darker if its <= 382
-                // Color is considered lighter if its > 382
-                sumRGB = ConvertToRGB(col);    // get the color objects sum of the RGB value
-                if (sumRGB <= MIDDLE)    // Darker Background
-                {
-                    colorStripDropDownButton.DropDownItems[i].ForeColor = Color.White;    // set to White text
-                }
-                else if (sumRGB > MIDDLE)    // Lighter Background
-                {
-                    colorStripDropDownButton.DropDownItems[i].ForeColor = Color.Black;    // set to Black text
-                }
-            }
-
-            // fill fonts in font combo box
-            InstalledFontCollection fonts = new InstalledFontCollection();
-            foreach (FontFamily family in fonts.Families)
-            {
-                fontStripComboBox.Items.Add(family.Name);
-            }
 
             // determines the line and column numbers of mouse position on the richTextBox
             int pos = richTextBox1.SelectionStart;
             int line = richTextBox1.GetLineFromCharIndex(pos);
             int column = richTextBox1.SelectionStart - richTextBox1.GetFirstCharIndexFromLine(line);
             lineColumnStatusLabel.Text = "Line " + (line + 1) + ", Column " + (column + 1);
-        }
-        
-        //******************************************************************************************************************************
-        // ConvertToRGB - Accepts a Color object as its parameter. Gets the RGB values of the object passed to it, calculates the sum. *
-        //******************************************************************************************************************************
-        private int ConvertToRGB(System.Drawing.Color c)
-        {
-            int r = c.R, // RED component value
-                g = c.G, // GREEN component value
-                b = c.B; // BLUE component value
-            int sum = 0;
 
-            // calculate sum of RGB
-            sum = r + g + b;
+            this.ResumeLayout();
 
-            return sum;
+            this.ucToolbar1.boldStripButton.Click += new System.EventHandler(this.boldStripButton3_Click);
+            this.ucToolbar1.italicStripButton.Click += new System.EventHandler(this.italicStripButton_Click);
+            this.ucToolbar1.underlineStripButton.Click += new System.EventHandler(this.underlineStripButton_Click);
+            this.ucToolbar1.colorStripDropDownButton.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.colorStripDropDownButton_DropDownItemClicked);
+            this.ucToolbar1.clearFormattingStripButton.Click += new System.EventHandler(this.clearFormattingStripButton_Click);
         }
+
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
             richTextBox1.SelectAll();     // select all text
@@ -175,16 +108,6 @@ namespace Text_Editor
 
         private void boldStripButton3_Click(object sender, EventArgs e)
         {
-           
-            if (boldStripButton3.Checked == false)
-            {
-                boldStripButton3.Checked = true; // BOLD is true
-            }
-            else if (boldStripButton3.Checked == true)
-            {
-                boldStripButton3.Checked = false;    // BOLD is false
-            }
-
             if (richTextBox1.SelectionFont == null)
             {
                 return;
@@ -208,15 +131,6 @@ namespace Text_Editor
 
         private void underlineStripButton_Click(object sender, EventArgs e)
         {
-            if (underlineStripButton.Checked == false)
-            {
-                underlineStripButton.Checked = true;     // UNDERLINE is active
-            }
-            else if (underlineStripButton.Checked == true)
-            {
-                underlineStripButton.Checked = false;    // UNDERLINE is not active
-            }
-
             if (richTextBox1.SelectionFont == null)
             {
                 return;
@@ -239,15 +153,6 @@ namespace Text_Editor
 
         private void italicStripButton_Click(object sender, EventArgs e)
         {
-            if (italicStripButton.Checked == false)
-            {
-                italicStripButton.Checked = true;    // ITALICS is active
-            }
-            else if (italicStripButton.Checked == true)
-            {
-                italicStripButton.Checked = false;    // ITALICS is not active
-            }
-
             if (richTextBox1.SelectionFont == null)
             {
                 return;
@@ -275,17 +180,6 @@ namespace Text_Editor
             }
             // sets the font size when changed
             richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily,Convert.ToInt32(fontSizeComboBox.Text),richTextBox1.SelectionFont.Style);
-        }
-
-        private void fontStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (richTextBox1.SelectionFont == null)
-            {
-                // sets the Font Family style
-                richTextBox1.SelectionFont = new Font(fontStripComboBox.Text, richTextBox1.Font.Size);
-            }
-            // sets the selected font famly style
-            richTextBox1.SelectionFont = new Font(fontStripComboBox.Text, richTextBox1.SelectionFont.Size);
         }
 
         private void saveStripButton_Click(object sender, EventArgs e)
@@ -320,7 +214,7 @@ namespace Text_Editor
             }
         }
 
-        private void colorStripDropDownButton_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+            private void colorStripDropDownButton_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             // creates a KnownColor object
             KnownColor selectedColor;
@@ -330,12 +224,20 @@ namespace Text_Editor
 
         private void richTextBox1_SelectionChanged(object sender, EventArgs e)
         {
-            // highlight button border when buttons are true
-            if (richTextBox1.SelectionFont != null)
+            if (!string.IsNullOrEmpty(richTextBox1.SelectedText))
             {
-                boldStripButton3.Checked = richTextBox1.SelectionFont.Bold;
-                italicStripButton.Checked = richTextBox1.SelectionFont.Italic;
-                underlineStripButton.Checked = richTextBox1.SelectionFont.Underline;
+                var charPos = richTextBox1.GetPositionFromCharIndex(richTextBox1.SelectionStart);
+                int finalX = richTextBox1.Location.X+ charPos.X - 12;
+                int finalY = richTextBox1.Location.Y + charPos.Y - 30;
+                if (finalX + ucToolbar1.Width > richTextBox1.Location.X + richTextBox1.Width)
+                    finalX = richTextBox1.Location.X + richTextBox1.Width - ucToolbar1.Width;
+
+                ucToolbar1.Location = new Point(finalX, finalY);
+                ucToolbar1.DelayVisible(true, 200);
+            }
+            else
+            {
+                ucToolbar1.DelayVisible(false, 1000);
             }
         }
 
@@ -713,16 +615,18 @@ namespace Text_Editor
 
         private void clearFormattingStripButton_Click(object sender, EventArgs e)
         {
-            fontStripComboBox.Text = "Font Family";
-            fontSizeComboBox.Text = "Font Size";
-            string pureText = richTextBox1.Text;    // get the current Plain Text     
-            richTextBox1.Clear();    // clear RTB
-            richTextBox1.ForeColor = Color.Black;    // ensure the text color is back to Black
-            richTextBox1.Font = default(Font);    // set default font
-            richTextBox1.Text = pureText;    // Set it back to its orginial text, added as plain text
-            rightAlignStripButton.Checked = false;
-            centerAlignStripButton.Checked = false;
-            leftAlignStripButton.Checked = true;           
+            if (richTextBox1.SelectionFont == null)
+            {
+                return;
+            }
+            // create fontStyle object
+            FontStyle style = richTextBox1.SelectionFont.Style;
+
+            style &= ~FontStyle.Underline;
+            style &= ~FontStyle.Bold;
+            style &= ~FontStyle.Italic;
+
+            richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont, style);         
         }
 
         private void printDocument_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
@@ -780,6 +684,34 @@ namespace Text_Editor
             {
                 // set the selected color to the RTB's forecolor
                 richTextBox1.ForeColor = colorDialog1.Color;
+            }
+        }
+
+        private void imgStripButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openImageDlg = new OpenFileDialog();
+            openImageDlg.Filter = "所有图片(*.bmp,*.gif,*.jpg)|*.bmp;*.gif;*jpg";
+            openImageDlg.Title = "选择图片";
+            Bitmap bmp;
+            if (openImageDlg.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = openImageDlg.FileName;
+                if (null == fileName || fileName.Trim().Length == 0)
+                    return;
+                try
+                {
+                    bmp = new Bitmap(fileName);
+                    Clipboard.SetDataObject(bmp);
+                    DataFormats.Format dataFormat =
+                        DataFormats.GetFormat(DataFormats.Bitmap);
+                    if (richTextBox1.CanPaste(dataFormat))
+                        richTextBox1.Paste(dataFormat);
+                }
+                catch (Exception exc)
+                {
+                    MessageBox.Show("图片插入失败。" + exc.Message, "提示",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
         }
 

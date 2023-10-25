@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmEditor));
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.richTextBox1 = new Text_Editor.RichTextBoxEx();
             this.richContextStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -50,7 +50,6 @@
             this.undoStripButton = new System.Windows.Forms.ToolStripButton();
             this.redoStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.fontStripComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.fontSizeComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.increaseStripButton = new System.Windows.Forms.ToolStripButton();
             this.decreaseStripButton = new System.Windows.Forms.ToolStripButton();
@@ -59,12 +58,8 @@
             this.lowercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uppercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
-            this.clearFormattingStripButton = new System.Windows.Forms.ToolStripButton();
+            this.imgStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.boldStripButton3 = new System.Windows.Forms.ToolStripButton();
-            this.italicStripButton = new System.Windows.Forms.ToolStripButton();
-            this.underlineStripButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.leftAlignStripButton = new System.Windows.Forms.ToolStripButton();
             this.centerAlignStripButton = new System.Windows.Forms.ToolStripButton();
             this.rightAlignStripButton = new System.Windows.Forms.ToolStripButton();
@@ -105,6 +100,7 @@
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lineColumnStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.ucToolbar1 = new Text_Editor.UCToolbar();
             this.richContextStrip.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -113,7 +109,10 @@
             // 
             // richTextBox1
             // 
+            this.richTextBox1.BackColor = System.Drawing.Color.Black;
             this.richTextBox1.ContextMenuStrip = this.richContextStrip;
+            this.richTextBox1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.richTextBox1.ForeColor = System.Drawing.Color.Gainsboro;
             this.richTextBox1.Location = new System.Drawing.Point(16, 75);
             this.richTextBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.richTextBox1.Name = "richTextBox1";
@@ -214,6 +213,7 @@
             // 
             // toolStrip1
             // 
+            this.toolStrip1.BackColor = System.Drawing.Color.White;
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveStripButton,
@@ -225,19 +225,14 @@
             this.undoStripButton,
             this.redoStripButton,
             this.toolStripSeparator1,
-            this.fontStripComboBox,
             this.fontSizeComboBox,
             this.increaseStripButton,
             this.decreaseStripButton,
             this.colorStripDropDownButton,
             this.changeCaseDropDownButton,
             this.toolStripSeparator9,
-            this.clearFormattingStripButton,
+            this.imgStripButton,
             this.toolStripSeparator2,
-            this.boldStripButton3,
-            this.italicStripButton,
-            this.underlineStripButton,
-            this.toolStripSeparator3,
             this.leftAlignStripButton,
             this.centerAlignStripButton,
             this.rightAlignStripButton,
@@ -326,15 +321,6 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 31);
             // 
-            // fontStripComboBox
-            // 
-            this.fontStripComboBox.Name = "fontStripComboBox";
-            this.fontStripComboBox.Size = new System.Drawing.Size(205, 31);
-            this.fontStripComboBox.Sorted = true;
-            this.fontStripComboBox.Text = "Font Family";
-            this.fontStripComboBox.ToolTipText = "Font Family";
-            this.fontStripComboBox.SelectedIndexChanged += new System.EventHandler(this.fontStripComboBox_SelectedIndexChanged);
-            // 
             // fontSizeComboBox
             // 
             this.fontSizeComboBox.AutoSize = false;
@@ -405,55 +391,20 @@
             this.toolStripSeparator9.Name = "toolStripSeparator9";
             this.toolStripSeparator9.Size = new System.Drawing.Size(6, 31);
             // 
-            // clearFormattingStripButton
+            // imgStripButton
             // 
-            this.clearFormattingStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.clearFormattingStripButton.Image = ((System.Drawing.Image)(resources.GetObject("clearFormattingStripButton.Image")));
-            this.clearFormattingStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.clearFormattingStripButton.Name = "clearFormattingStripButton";
-            this.clearFormattingStripButton.Size = new System.Drawing.Size(29, 28);
-            this.clearFormattingStripButton.Text = "Clear All Formatting";
-            this.clearFormattingStripButton.Click += new System.EventHandler(this.clearFormattingStripButton_Click);
+            this.imgStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.imgStripButton.Image = ((System.Drawing.Image)(resources.GetObject("imgStripButton.Image")));
+            this.imgStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.imgStripButton.Name = "imgStripButton";
+            this.imgStripButton.Size = new System.Drawing.Size(29, 28);
+            this.imgStripButton.Text = "Clear All Formatting";
+            this.imgStripButton.Click += new System.EventHandler(this.imgStripButton_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 31);
-            // 
-            // boldStripButton3
-            // 
-            this.boldStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.boldStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("boldStripButton3.Image")));
-            this.boldStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.boldStripButton3.Name = "boldStripButton3";
-            this.boldStripButton3.Size = new System.Drawing.Size(29, 28);
-            this.boldStripButton3.Text = "Bold";
-            this.boldStripButton3.Click += new System.EventHandler(this.boldStripButton3_Click);
-            // 
-            // italicStripButton
-            // 
-            this.italicStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.italicStripButton.Image = ((System.Drawing.Image)(resources.GetObject("italicStripButton.Image")));
-            this.italicStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.italicStripButton.Name = "italicStripButton";
-            this.italicStripButton.Size = new System.Drawing.Size(29, 28);
-            this.italicStripButton.Text = "Italics";
-            this.italicStripButton.Click += new System.EventHandler(this.italicStripButton_Click);
-            // 
-            // underlineStripButton
-            // 
-            this.underlineStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.underlineStripButton.Image = ((System.Drawing.Image)(resources.GetObject("underlineStripButton.Image")));
-            this.underlineStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.underlineStripButton.Name = "underlineStripButton";
-            this.underlineStripButton.Size = new System.Drawing.Size(29, 28);
-            this.underlineStripButton.Text = "Underline";
-            this.underlineStripButton.Click += new System.EventHandler(this.underlineStripButton_Click);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 31);
             // 
             // leftAlignStripButton
             // 
@@ -785,11 +736,23 @@
             this.lineColumnStatusLabel.Spring = true;
             this.lineColumnStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // ucToolbar1
+            // 
+            this.ucToolbar1.BackColor = System.Drawing.Color.Black;
+            this.ucToolbar1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ucToolbar1.Location = new System.Drawing.Point(652, 347);
+            this.ucToolbar1.Name = "ucToolbar1";
+            this.ucToolbar1.Size = new System.Drawing.Size(280, 34);
+            this.ucToolbar1.TabIndex = 20;
+            this.ucToolbar1.Visible = false;
+            // 
             // frmEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1136, 713);
+            this.Controls.Add(this.ucToolbar1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
@@ -817,7 +780,7 @@
 
         #endregion
 
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private RichTextBoxEx richTextBox1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ContextMenuStrip richContextStrip;
@@ -829,13 +792,8 @@
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton saveStripButton;
         private System.Windows.Forms.ToolStripButton openFileStripButton;
-        private System.Windows.Forms.ToolStripComboBox fontStripComboBox;
         private System.Windows.Forms.ToolStripComboBox fontSizeComboBox;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripButton boldStripButton3;
-        private System.Windows.Forms.ToolStripButton italicStripButton;
-        private System.Windows.Forms.ToolStripButton underlineStripButton;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripDropDownButton colorStripDropDownButton;
         private System.Windows.Forms.ToolStripButton leftAlignStripButton;
         private System.Windows.Forms.ToolStripButton centerAlignStripButton;
@@ -879,7 +837,7 @@
         private System.Windows.Forms.FontDialog fontDialog1;
         private System.Windows.Forms.ToolStripDropDownButton zoomDropDownButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
-        private System.Windows.Forms.ToolStripButton clearFormattingStripButton;
+        private System.Windows.Forms.ToolStripButton imgStripButton;
         private System.Windows.Forms.PrintPreviewDialog printPreviewDialog;
         private System.Drawing.Printing.PrintDocument printDocument;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
@@ -892,5 +850,6 @@
         private System.Windows.Forms.ToolStripMenuItem colorOptionsToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel lineColumnStatusLabel;
+        private UCToolbar ucToolbar1;
     }
 }
