@@ -4,15 +4,8 @@
  * Date: November 1, 2016 
  */
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Drawing.Text;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
 using System.Windows.Forms;
 using System.IO;
 
@@ -22,11 +15,11 @@ namespace Text_Editor
     {
         string filenamee;    // file opened inside of RTB
 
-        int pos, line, column;    // for detecting line and column numbers
-
         public frmEditor()
         {
             InitializeComponent();
+            this.BackColor = Color.FromArgb(32, 32, 32);
+            richTextBox1.BackColor = Color.FromArgb(32, 32, 32);
         }
 
         private void frmEditor_Load(object sender, EventArgs e)
@@ -39,16 +32,10 @@ namespace Text_Editor
             fontDialog1.ShowColor = true;
             fontDialog1.ShowApply = true;
             fontDialog1.ShowHelp = true;
-            colorDialog1.AllowFullOpen = true;
-            colorDialog1.AnyColor = true;
-            colorDialog1.SolidColorOnly = false;
-            colorDialog1.ShowHelp = true;
-            colorDialog1.AnyColor = true;
             leftAlignStripButton.Checked = true;
             centerAlignStripButton.Checked = false;
             rightAlignStripButton.Checked = false;
             rightAlignStripButton.Checked = false;
-            bulletListStripButton.Checked = false;
             MinimizeBox = false;
             MaximizeBox = false;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -65,12 +52,6 @@ namespace Text_Editor
             zoomDropDownButton.DropDown.Items.Add("400%");
             zoomDropDownButton.DropDown.Items.Add("500%");
 
-            // determines the line and column numbers of mouse position on the richTextBox
-            int pos = richTextBox1.SelectionStart;
-            int line = richTextBox1.GetLineFromCharIndex(pos);
-            int column = richTextBox1.SelectionStart - richTextBox1.GetFirstCharIndexFromLine(line);
-            lineColumnStatusLabel.Text = "Line " + (line + 1) + ", Column " + (column + 1);
-
             this.ResumeLayout();
 
             this.ucToolbar1.boldStripButton.Click += new System.EventHandler(this.boldStripButton3_Click);
@@ -78,6 +59,8 @@ namespace Text_Editor
             this.ucToolbar1.underlineStripButton.Click += new System.EventHandler(this.underlineStripButton_Click);
             this.ucToolbar1.colorStripDropDownButton.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.colorStripDropDownButton_DropDownItemClicked);
             this.ucToolbar1.clearFormattingStripButton.Click += new System.EventHandler(this.clearFormattingStripButton_Click);
+            this.ucToolbar1.blistToolStripMenuItem.Click += bulletListStripButton_Click;
+            this.ucToolbar1.textToolStripMenuItem.Click += textListStripButton_Click;
         }
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -274,7 +257,7 @@ namespace Text_Editor
         }
 
         private void rightAlignStripButton_Click(object sender, EventArgs e)
-        {
+        { 
             // set properties
             leftAlignStripButton.Checked = false;
             centerAlignStripButton.Checked = false;
@@ -292,15 +275,28 @@ namespace Text_Editor
 
         private void bulletListStripButton_Click(object sender, EventArgs e)
         {
-            if (bulletListStripButton.Checked == false)
+            // 判断当前行的第一个字符是否是 "x"
+            if (!IsLineMyBullet(out int currentLineIndex))
             {
-                bulletListStripButton.Checked = true;
-                richTextBox1.SelectionBullet = true;    // BULLET LIST is active
+                // 如果不是 "x"，在当前行的开头插入 "x"
+                richTextBox1.SelectionStart = richTextBox1.GetFirstCharIndexFromLine(currentLineIndex);
+                richTextBox1.SelectionLength = 0;
+                richTextBox1.SelectedText = bulletMarker[richTextBox1.SelectionIndent / 60].ToString() + " ";
             }
-            else if (bulletListStripButton.Checked == true)
+        }
+
+        private void textListStripButton_Click(object sender, EventArgs e)
+        {
+            // 判断当前行的第一个字符是否是 "x"
+            if (IsLineMyBullet(out int currentLineIndex))
             {
-                bulletListStripButton.Checked = false;
-                richTextBox1.SelectionBullet = false;    // BULLET LIST is not active
+                // 如果是 "x"，选中并删除它
+                richTextBox1.Select(richTextBox1.GetFirstCharIndexFromLine(currentLineIndex), 1);
+                richTextBox1.SelectedText = "";
+
+                richTextBox1.Select(richTextBox1.GetFirstCharIndexFromLine(currentLineIndex), 1);
+                if(string.IsNullOrWhiteSpace(richTextBox1.SelectedText))
+                    richTextBox1.SelectedText = "";
             }
         }
 
@@ -615,6 +611,11 @@ namespace Text_Editor
 
         private void clearFormattingStripButton_Click(object sender, EventArgs e)
         {
+            ClearFormat();
+        }
+
+        private void ClearFormat()
+        {
             if (richTextBox1.SelectionFont == null)
             {
                 return;
@@ -626,65 +627,7 @@ namespace Text_Editor
             style &= ~FontStyle.Bold;
             style &= ~FontStyle.Italic;
 
-            richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont, style);         
-        }
-
-        private void printDocument_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
-        {
-            // draws the string onto the print document
-            e.Graphics.DrawString(richTextBox1.Text, richTextBox1.Font, Brushes.Black, 100, 20);
-            e.Graphics.PageUnit = GraphicsUnit.Inch; 
-        }
-
-        private void printStripButton_Click(object sender, EventArgs e)
-        {
-            // printDialog associates with PrintDocument
-            printDialog.Document = printDocument;
-            if (printDialog.ShowDialog() == DialogResult.OK)
-            {
-                printDocument.Print(); // Print the document
-            }
-        }
-
-        private void printPreviewStripButton_Click(object sender, EventArgs e)
-        {
-            printPreviewDialog.Document = printDocument; 
-            // Show PrintPreview Dialog 
-            printPreviewDialog.ShowDialog();
-        }
-
-        private void printStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // printDialog associates with PrintDocument
-            printDialog.Document = printDocument;
-            if (printDialog.ShowDialog() == DialogResult.OK)
-            {
-                printDocument.Print();
-            }
-        }
-
-        private void printPreviewStripMenuItem_Click(object sender, EventArgs e)
-        {
-            printPreviewDialog.Document = printDocument;
-            // Show PrintPreview Dialog 
-            printPreviewDialog.ShowDialog();
-        }
-
-        private void colorDialog1_HelpRequest(object sender, EventArgs e)
-        {
-            // display HelpRequest message
-            MessageBox.Show("Please select a color by clicking it. This will change the text color.", "Color Dialog Help Request", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void colorOptionsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            colorDialog1.ShowDialog();
-
-            if(colorDialog1.ShowDialog() == DialogResult.OK)
-            {
-                // set the selected color to the RTB's forecolor
-                richTextBox1.ForeColor = colorDialog1.Color;
-            }
+            richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont, style);
         }
 
         private void imgStripButton_Click(object sender, EventArgs e)
@@ -715,6 +658,21 @@ namespace Text_Editor
             }
         }
 
+        string bulletMarker = "●◆◇▷▪";
+        private bool IsLineMyBullet(out int currentLineIndex)
+        {
+            // 获取当前行的索引
+            currentLineIndex = richTextBox1.GetLineFromCharIndex(richTextBox1.SelectionStart);
+
+            // 获取当前行的文本
+            string currentLineText = richTextBox1.Lines[currentLineIndex];
+
+            // 判断当前行的第一个字符是否是 "x"
+            if (currentLineText.Length == 0 || bulletMarker.Contains(currentLineText[0]))
+                return true;
+            return false;
+        }
+
         //****************************************************************************************************************************************
         // richTextBox1_KeyUp - Determines which key was released and gets the line and column numbers of the current cursor position in the RTB *
         //**************************************************************************************************************************************** 
@@ -723,30 +681,35 @@ namespace Text_Editor
             // determine key released
             switch (e.KeyCode)
             {
-                case Keys.Down:
-                    pos = richTextBox1.SelectionStart;    // get starting point
-                    line = richTextBox1.GetLineFromCharIndex(pos);    // get line number
-                    column = richTextBox1.SelectionStart - richTextBox1.GetFirstCharIndexFromLine(line);    // get column number
-                    lineColumnStatusLabel.Text = "Line " + (line + 1) + ", Column " + (column + 1);
+                case Keys.Enter:
+                    if (IsLineMyBullet(out int currentLineIndex))
+                    {
+                        richTextBox1.SelectionStart = richTextBox1.GetFirstCharIndexFromLine(currentLineIndex);
+                        richTextBox1.SelectionLength = 0;
+                        richTextBox1.SelectedText = bulletMarker[richTextBox1.SelectionIndent / 60].ToString() + " ";
+                    }
+                    ClearFormat(); //格式不带到下一行
                     break;
-                case Keys.Right:
-                    pos = richTextBox1.SelectionStart; // get starting point
-                    line = richTextBox1.GetLineFromCharIndex(pos); // get line number
-                    column = richTextBox1.SelectionStart - richTextBox1.GetFirstCharIndexFromLine(line);    // get column number
-                    lineColumnStatusLabel.Text = "Line " + (line + 1) + ", Column " + (column + 1);
+                case Keys.Tab:
+                    if (e.Shift)
+                        richTextBox1.SelectionIndent = Math.Max(0, richTextBox1.SelectionIndent - 60);
+                    else
+                        richTextBox1.SelectionIndent = Math.Min(240, richTextBox1.SelectionIndent + 60);
+                    if(IsLineMyBullet(out int lineIndex))
+                    {
+                        richTextBox1.SelectionStart = richTextBox1.GetFirstCharIndexFromLine(lineIndex);
+                        richTextBox1.SelectionLength = 2;
+                        richTextBox1.SelectedText = bulletMarker[richTextBox1.SelectionIndent / 60].ToString() + " ";
+                    }
                     break;
-                case Keys.Up:
-                    pos = richTextBox1.SelectionStart; // get starting point
-                    line = richTextBox1.GetLineFromCharIndex(pos); // get line number
-                    column = richTextBox1.SelectionStart - richTextBox1.GetFirstCharIndexFromLine(line);    // get column number
-                    lineColumnStatusLabel.Text = "Line " + (line + 1) + ", Column " + (column + 1);
-                    break;
-                case Keys.Left:
-                    pos = richTextBox1.SelectionStart; // get starting point
-                    line = richTextBox1.GetLineFromCharIndex(pos); // get line number
-                    column = richTextBox1.SelectionStart - richTextBox1.GetFirstCharIndexFromLine(line);    // get column number
-                    lineColumnStatusLabel.Text = "Line " + (line + 1) + ", Column " + (column + 1);
-                    break;                
+            }
+        }
+
+        private void richTextBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Tab)
+            {
+                e.SuppressKeyPress = true;// 阻止 Tab 键的默认行为
             }
         }
 
@@ -758,8 +721,36 @@ namespace Text_Editor
             int pos = richTextBox1.SelectionStart;    // get starting point
             int line = richTextBox1.GetLineFromCharIndex(pos);    // get line number
             int column = richTextBox1.SelectionStart - richTextBox1.GetFirstCharIndexFromLine(line);    // get column number
-            lineColumnStatusLabel.Text = "Line " + (line + 1) + ", Column " + (column + 1);
         }
-        
+
+        int previousScrollPos = 0;
+        private void richTextBox1_VScroll(object sender, EventArgs e)
+        {
+            int currentScrollPos = richTextBox1.GetPositionFromCharIndex(0).Y;
+
+            if (currentScrollPos != previousScrollPos)
+            {
+                pictureBoxLeftS.Visible = false; // 滚动后，隐藏操作图标
+            }
+
+            previousScrollPos = currentScrollPos;
+        }
+
+        int lastRowId = -1;
+        private void richTextBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            var charIndex = richTextBox1.GetCharIndexFromPosition(e.Location);
+            int rowIndex = richTextBox1.GetLineFromCharIndex(charIndex);
+
+            if (lastRowId != rowIndex)
+            {
+                pictureBoxLeftS.Visible = true;
+
+                var charPos = richTextBox1.GetPositionFromCharIndex(charIndex);
+                pictureBoxLeftS.Location = new Point(20, charPos.Y + richTextBox1.Location.Y);
+                lastRowId = rowIndex;
+            }
+        }
+
     }
 }

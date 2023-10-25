@@ -36,6 +36,7 @@ namespace Text_Editor
             this.lowercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uppercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+            this.clearFormattingStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.boldStripButton = new System.Windows.Forms.ToolStripButton();
             this.italicStripButton = new System.Windows.Forms.ToolStripButton();
@@ -43,7 +44,9 @@ namespace Text_Editor
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.bulletListStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
-            this.clearFormattingStripButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.textToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.blistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -52,6 +55,7 @@ namespace Text_Editor
             this.toolStrip1.BackColor = System.Drawing.Color.White;
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripDropDownButton1,
             this.colorStripDropDownButton,
             this.changeCaseDropDownButton,
             this.toolStripSeparator9,
@@ -93,19 +97,28 @@ namespace Text_Editor
             // lowercaseToolStripMenuItem
             // 
             this.lowercaseToolStripMenuItem.Name = "lowercaseToolStripMenuItem";
-            this.lowercaseToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.lowercaseToolStripMenuItem.Size = new System.Drawing.Size(177, 26);
             this.lowercaseToolStripMenuItem.Text = "&lowercase";
             // 
             // uppercaseToolStripMenuItem
             // 
             this.uppercaseToolStripMenuItem.Name = "uppercaseToolStripMenuItem";
-            this.uppercaseToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.uppercaseToolStripMenuItem.Size = new System.Drawing.Size(177, 26);
             this.uppercaseToolStripMenuItem.Text = "&UPPERCASE";
             // 
             // toolStripSeparator9
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
             this.toolStripSeparator9.Size = new System.Drawing.Size(6, 31);
+            // 
+            // clearFormattingStripButton
+            // 
+            this.clearFormattingStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.clearFormattingStripButton.Image = ((System.Drawing.Image)(resources.GetObject("clearFormattingStripButton.Image")));
+            this.clearFormattingStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.clearFormattingStripButton.Name = "clearFormattingStripButton";
+            this.clearFormattingStripButton.Size = new System.Drawing.Size(29, 28);
+            this.clearFormattingStripButton.Text = "Clear All Formatting";
             // 
             // toolStripSeparator2
             // 
@@ -158,14 +171,29 @@ namespace Text_Editor
             this.toolStripSeparator8.Name = "toolStripSeparator8";
             this.toolStripSeparator8.Size = new System.Drawing.Size(6, 31);
             // 
-            // clearFormattingStripButton
+            // toolStripDropDownButton1
             // 
-            this.clearFormattingStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.clearFormattingStripButton.Image = ((System.Drawing.Image)(resources.GetObject("clearFormattingStripButton.Image")));
-            this.clearFormattingStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.clearFormattingStripButton.Name = "clearFormattingStripButton";
-            this.clearFormattingStripButton.Size = new System.Drawing.Size(29, 28);
-            this.clearFormattingStripButton.Text = "Clear All Formatting";
+            this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.textToolStripMenuItem,
+            this.blistToolStripMenuItem});
+            this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
+            this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
+            this.toolStripDropDownButton1.Size = new System.Drawing.Size(83, 28);
+            this.toolStripDropDownButton1.Text = "切换类型";
+            // 
+            // textToolStripMenuItem
+            // 
+            this.textToolStripMenuItem.Name = "textToolStripMenuItem";
+            this.textToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.textToolStripMenuItem.Text = "文本";
+            // 
+            // blistToolStripMenuItem
+            // 
+            this.blistToolStripMenuItem.Name = "blistToolStripMenuItem";
+            this.blistToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.blistToolStripMenuItem.Text = "段落";
             // 
             // UCToolbar
             // 
@@ -198,5 +226,8 @@ namespace Text_Editor
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton bulletListStripButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+        private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
+        public System.Windows.Forms.ToolStripMenuItem textToolStripMenuItem;
+        public System.Windows.Forms.ToolStripMenuItem blistToolStripMenuItem;
     }
 }
