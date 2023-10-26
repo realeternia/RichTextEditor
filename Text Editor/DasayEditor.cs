@@ -8,14 +8,16 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using System.IO;
+using System.Diagnostics;
 
 namespace Text_Editor
 {
-    public partial class frmEditor : Form
+    public partial class DasayEditor : UserControl
     {
         string filenamee;    // file opened inside of RTB
+        public Form Parent;
 
-        public frmEditor()
+        public DasayEditor()
         {
             InitializeComponent();
             this.BackColor = Color.FromArgb(32, 32, 32);
@@ -36,10 +38,6 @@ namespace Text_Editor
             centerAlignStripButton.Checked = false;
             rightAlignStripButton.Checked = false;
             rightAlignStripButton.Checked = false;
-            MinimizeBox = false;
-            MaximizeBox = false;
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
-
 
             // fill zoomDropDownButton item list
             zoomDropDownButton.DropDown.Items.Add("20%");
@@ -61,6 +59,9 @@ namespace Text_Editor
             this.ucToolbar1.clearFormattingStripButton.Click += new System.EventHandler(this.clearFormattingStripButton_Click);
             this.ucToolbar1.blistToolStripMenuItem.Click += bulletListStripButton_Click;
             this.ucToolbar1.textToolStripMenuItem.Click += textListStripButton_Click;
+
+            textToolStripMenuItem.Click += textListStripButton_Click;
+            toolStripMenuItemBullet.Click += bulletListStripButton_Click;
         }
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -155,16 +156,6 @@ namespace Text_Editor
             richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont, style);    // sets the font style
         }
 
-        private void fontSizeComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (richTextBox1.SelectionFont == null)
-            {
-                return;
-            }
-            // sets the font size when changed
-            richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily,Convert.ToInt32(fontSizeComboBox.Text),richTextBox1.SelectionFont.Style);
-        }
-
         private void saveStripButton_Click(object sender, EventArgs e)
         {
             try
@@ -197,7 +188,7 @@ namespace Text_Editor
             }
         }
 
-            private void colorStripDropDownButton_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private void colorStripDropDownButton_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             // creates a KnownColor object
             KnownColor selectedColor;
@@ -300,45 +291,6 @@ namespace Text_Editor
             }
         }
 
-        private void increaseStripButton_Click(object sender, EventArgs e)
-        {
-            string fontSizeNum = fontSizeComboBox.Text;    // variable to hold selected size         
-            try
-            {
-                int size = Convert.ToInt32(fontSizeNum) + 1;    // convert (fontSizeNum + 1)
-                if (richTextBox1.SelectionFont == null)
-                {
-                    return;
-                }
-                // sets the updated font size
-                richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily,size,richTextBox1.SelectionFont.Style);
-                fontSizeComboBox.Text = size.ToString();    // update font size
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error Information", MessageBoxButtons.OK, MessageBoxIcon.Warning); // show error message
-            }
-        }
-
-        private void decreaseStripButton_Click(object sender, EventArgs e)
-        {
-            string fontSizeNum = fontSizeComboBox.Text;    // variable to hold selected size            
-            try
-            {
-                int size = Convert.ToInt32(fontSizeNum) - 1;    // convert (fontSizeNum - 1)
-                if (richTextBox1.SelectionFont == null)
-                {
-                    return;
-                }
-                // sets the updated font size
-                richTextBox1.SelectionFont = new Font(richTextBox1.SelectionFont.FontFamily,size,richTextBox1.SelectionFont.Style);
-                fontSizeComboBox.Text = size.ToString();    // update font size
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error Information", MessageBoxButtons.OK, MessageBoxIcon.Warning); // show error message
-            }
-        }
 
         //*********************************************************************************************
         // richTextBox1_DragEnter - Custom Event. Copies text being dragged into the richTextBox      *
@@ -379,122 +331,6 @@ namespace Text_Editor
             richTextBox1.Redo();    // redo move
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {            
-            this.Close();     // close the form
-        }
-
-        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
-        {           
-            richTextBox1.Undo();     // undo move
-        }
-
-        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
-        {           
-            richTextBox1.Redo();     // redo move
-        }
-
-        private void cutToolStripMenuItem1_Click(object sender, EventArgs e)
-        {            
-            richTextBox1.Cut();     // cut text
-        }
-
-        private void copyToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            
-            richTextBox1.Copy();     // copy text
-        }
-
-        private void pasteToolStripMenuItem1_Click(object sender, EventArgs e)
-        {           
-            richTextBox1.Paste();    // paste text
-        }
-
-        private void selectAllToolStripMenuItem1_Click(object sender, EventArgs e)
-        {            
-            richTextBox1.SelectAll();    // select all text
-        }
-
-        private void clearAllToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // clear the rich text box
-            richTextBox1.Clear();
-            richTextBox1.Focus();
-        }
-
-        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // delete selected text
-            richTextBox1.SelectedText = "";
-            richTextBox1.Focus();
-        }
-
-        private void OpenMenuItem_Click(object sender, EventArgs e)
-        {
-            openFileDialog1.ShowDialog();
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                richTextBox1.LoadFile(openFileDialog1.FileName, RichTextBoxStreamType.PlainText);
-                // richTextBox1.LoadFile(openFileDialog1.FileName, RichTextBoxStreamType.RichText);  // loads the file in RTB format
-            }
-        }
-
-        private void newMenuItem_Click(object sender, EventArgs e)
-        {
-            
-            if (richTextBox1.Text != string.Empty)    // RTB has contents - prompt user to save changes
-            {
-               // save changes message
-               DialogResult result =  MessageBox.Show("Would you like to save your changes? Editor is not empty.", "Save Changes?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                
-                if(result == DialogResult.Yes)
-                {
-                    // save the RTB contents if user selected yes
-                    saveFileDialog1.ShowDialog();    // show the dialog
-                    string file;
-                    if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-                    {
-                        string filename = saveFileDialog1.FileName;
-                        // save the contents of the rich text box
-                        richTextBox1.SaveFile(filename, RichTextBoxStreamType.PlainText);
-                        file = Path.GetFileName(filename); // get name of file
-                        MessageBox.Show("File " + file + " was saved successfully.", "Save Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-
-                    // finally - clear the contents of the RTB 
-                    richTextBox1.ResetText();
-                    richTextBox1.Focus();
-                }
-                else if(result == DialogResult.No)
-                {
-                    // clear the contents of the RTB 
-                    richTextBox1.ResetText();
-                    richTextBox1.Focus();
-                }               
-            }
-            else // RTB has no contents
-            {
-                // clear the contents of the RTB 
-                richTextBox1.ResetText();
-                richTextBox1.Focus();
-            }
-        }
-
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            saveFileDialog1.ShowDialog();    // show the dialog
-            string file; 
-
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                string filename = saveFileDialog1.FileName;
-                // save the contents of the rich text box
-                richTextBox1.SaveFile(filename, RichTextBoxStreamType.PlainText);
-            }
-            file = Path.GetFileName(filenamee);    // get name of file
-            MessageBox.Show("File " + file + " was saved successfully.", "Save Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
         private void zoomDropDownButton_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             float zoomPercent = Convert.ToSingle(e.ClickedItem.Text.Trim('%')); // convert
@@ -523,64 +359,15 @@ namespace Text_Editor
             }
         }
 
-        private void uppercaseToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            richTextBox1.SelectedText = richTextBox1.SelectedText.ToUpper();    // text to CAPS
-        }
-
-        private void lowercaseToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            richTextBox1.SelectedText = richTextBox1.SelectedText.ToLower();    // text to lowercase
-        }
-
         private void wordWrapToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // draw bmp in image property of selected item, while its active
-            Bitmap bmp = new Bitmap(5, 5);
-            using (Graphics gfx = Graphics.FromImage(bmp))
-            {
-                gfx.FillEllipse(Brushes.Black, 1, 1, 3, 3);
-            }
-
             if (richTextBox1.WordWrap == false)
             {
                 richTextBox1.WordWrap = true;    // WordWrap is active
-                wordWrapToolStripMenuItem.Image = bmp;    // draw ellipse in image property
             }
             else if(richTextBox1.WordWrap == true)
             {
                 richTextBox1.WordWrap = false;    // WordWrap is not active
-                wordWrapToolStripMenuItem.Image = null;    // clear image property
-            }
-        }
-
-        private void fontToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                fontDialog1.ShowDialog();    // show the Font Dialog
-                System.Drawing.Font oldFont = this.Font;    // gets current font
-
-                if (fontDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    fontDialog1_Apply(richTextBox1, new System.EventArgs());
-                }
-                // set back to the recent font
-                else if (fontDialog1.ShowDialog() == DialogResult.Cancel)
-                {
-                    // set current font back to the old font
-                    this.Font = oldFont;
-
-                    // sets the old font for the controls inside richTextBox1
-                    foreach (Control containedControl in richTextBox1.Controls)
-                    {
-                        containedControl.Font = oldFont;
-                    }
-                }
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error Information", MessageBoxButtons.OK, MessageBoxIcon.Warning); // error
             }
         }
 
@@ -752,5 +539,10 @@ namespace Text_Editor
             }
         }
 
+        private void pictureBoxLeftS_Click(object sender, EventArgs e)
+        {
+            customMenuStripRow.Show(Parent.Location.X + pictureBoxLeftS.Location.X - 180,
+              Parent.Location.Y +  pictureBoxLeftS.Location.Y + 40);
+        }
     }
 }
