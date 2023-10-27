@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Text_Editor
 {
-    class RichTextBoxEx : RichTextBox
+    public class RichTextBoxEx : RichTextBox
     {
         private const int WM_SETCURSOR = 0x20;
 

@@ -1,6 +1,6 @@
 ﻿namespace Text_Editor
 {
-    partial class DasayEditor
+    public partial class DasayEditor
     {
         /// <summary>
         /// Required designer variable.
