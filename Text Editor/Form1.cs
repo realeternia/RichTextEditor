@@ -7,8 +7,6 @@ namespace Text_Editor
         public Form1()
         {
             InitializeComponent();
-
-            dasayEditor1.Parent = this;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Text_Editor
 
         private Timer fadeInTimer;
         private bool toShow;
-        private int timeToFinish;
+        private DateTime timeToFinish;
 
         const int MIDDLE = 382;    // middle sum of RGB - max is 765
         int sumRGB;    // sum of the selected colors RGB
@@ -66,15 +66,13 @@ namespace Text_Editor
 
             fadeInTimer.Stop();
             toShow = visible;
-            timeToFinish = ms;
+            timeToFinish = DateTime.Now.AddMilliseconds(ms);
             fadeInTimer.Start();
         }
 
         private void FadeInTimer_Tick(object sender, EventArgs e)
         {
-            timeToFinish -= fadeInTimer.Interval;
-
-            if (timeToFinish <= 0)
+            if (DateTime.Now > timeToFinish)
             {
                 fadeInTimer.Stop();
                 Visible = toShow;

@@ -293,7 +293,7 @@
             // 
             // ucToolbar1
             // 
-            this.ucToolbar1.BackColor = System.Drawing.Color.Black;
+            this.ucToolbar1.BackColor = System.Drawing.Color.White;
             this.ucToolbar1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ucToolbar1.Location = new System.Drawing.Point(652, 347);
             this.ucToolbar1.Name = "ucToolbar1";
@@ -317,13 +317,13 @@
             this.richTextBox1.Size = new System.Drawing.Size(1320, 796);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
+            this.richTextBox1.WordWrap = false;
             this.richTextBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.richTextBox1_DragDrop);
             this.richTextBox1.DragEnter += new System.Windows.Forms.DragEventHandler(this.richTextBox1_DragEnter);
             this.richTextBox1.SelectionChanged += new System.EventHandler(this.richTextBox1_SelectionChanged);
             this.richTextBox1.VScroll += new System.EventHandler(this.richTextBox1_VScroll);
             this.richTextBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.richTextBox1_KeyDown);
             this.richTextBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.richTextBox1_KeyUp);
-            this.richTextBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.richTextBox1_MouseDown);
             this.richTextBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.richTextBox1_MouseMove);
             // 
             // customMenuStripRow
@@ -374,7 +374,7 @@
             this.textToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             this.textToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.textToolStripMenuItem.Name = "textToolStripMenuItem";
-            this.textToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.textToolStripMenuItem.Size = new System.Drawing.Size(134, 26);
             this.textToolStripMenuItem.Text = "text";
             // 
             // toolStripMenuItemBullet
@@ -382,7 +382,7 @@
             this.toolStripMenuItemBullet.BackColor = System.Drawing.Color.Black;
             this.toolStripMenuItemBullet.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.toolStripMenuItemBullet.Name = "toolStripMenuItemBullet";
-            this.toolStripMenuItemBullet.Size = new System.Drawing.Size(224, 26);
+            this.toolStripMenuItemBullet.Size = new System.Drawing.Size(134, 26);
             this.toolStripMenuItemBullet.Text = "bullet";
             // 
             // DasayEditor

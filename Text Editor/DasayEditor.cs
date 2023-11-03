@@ -15,7 +15,6 @@ namespace Text_Editor
     public partial class DasayEditor : UserControl
     {
         string filenamee;    // file opened inside of RTB
-        public Form Parent;
 
         public DasayEditor()
         {
@@ -160,18 +159,13 @@ namespace Text_Editor
         {
             try
             {
-                string file;
-                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    string filename = saveFileDialog1.FileName;
-                    // save the contents of the rich text box
-                    richTextBox1.SaveFile(filename, RichTextBoxStreamType.RichText);
-                    file = Path.GetFileName(filename);    // get name of file
-                    MessageBox.Show("File " + file + " was saved successfully.", "Save Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                
+                string filename = filenamee;
+                // save the contents of the rich text box
+                richTextBox1.SaveFile(filename, RichTextBoxStreamType.RichText);
+                var file = Path.GetFileName(filename);    // get name of file
+                MessageBox.Show("File " + file + " was saved successfully.", "Save Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
@@ -185,6 +179,21 @@ namespace Text_Editor
                 // load the file into the richTextBox
                 richTextBox1.LoadFile(filenamee, RichTextBoxStreamType.RichText);    // loads it in regular text format
                 // richTextBox1.LoadFile(filename, RichTextBoxStreamType.RichText);    // loads it in RTB format
+            }
+        }
+
+        public void LoadFile(string path)
+        {
+            var fullPath = string.Format("save/{0}.rtf", path);
+            filenamee = fullPath;
+            if (File.Exists(fullPath))
+            {
+                // load the file into the richTextBox
+                richTextBox1.LoadFile(filenamee, RichTextBoxStreamType.RichText);
+            }
+            else
+            {
+                richTextBox1.Clear();
             }
         }
 
@@ -272,7 +281,7 @@ namespace Text_Editor
                 // 如果不是 "x"，在当前行的开头插入 "x"
                 richTextBox1.SelectionStart = richTextBox1.GetFirstCharIndexFromLine(currentLineIndex);
                 richTextBox1.SelectionLength = 0;
-                richTextBox1.SelectedText = bulletMarker[richTextBox1.SelectionIndent / 60].ToString() + " ";
+                richTextBox1.SelectedText = bulletMarker[richTextBox1.SelectionIndent / 30].ToString() + " ";
             }
         }
 
@@ -473,20 +482,20 @@ namespace Text_Editor
                     {
                         richTextBox1.SelectionStart = richTextBox1.GetFirstCharIndexFromLine(currentLineIndex);
                         richTextBox1.SelectionLength = 0;
-                        richTextBox1.SelectedText = bulletMarker[richTextBox1.SelectionIndent / 60].ToString() + " ";
+                        richTextBox1.SelectedText = bulletMarker[richTextBox1.SelectionIndent / 30].ToString() + " ";
                     }
                     ClearFormat(); //格式不带到下一行
                     break;
                 case Keys.Tab:
                     if (e.Shift)
-                        richTextBox1.SelectionIndent = Math.Max(0, richTextBox1.SelectionIndent - 60);
+                        richTextBox1.SelectionIndent = Math.Max(0, richTextBox1.SelectionIndent - 30);
                     else
-                        richTextBox1.SelectionIndent = Math.Min(240, richTextBox1.SelectionIndent + 60);
+                        richTextBox1.SelectionIndent = Math.Min(240, richTextBox1.SelectionIndent + 30);
                     if(IsLineMyBullet(out int lineIndex))
                     {
                         richTextBox1.SelectionStart = richTextBox1.GetFirstCharIndexFromLine(lineIndex);
                         richTextBox1.SelectionLength = 2;
-                        richTextBox1.SelectedText = bulletMarker[richTextBox1.SelectionIndent / 60].ToString() + " ";
+                        richTextBox1.SelectedText = bulletMarker[richTextBox1.SelectionIndent / 30].ToString() + " ";
                     }
                     break;
             }
@@ -503,12 +512,6 @@ namespace Text_Editor
         //****************************************************************************************************************************
         // richTextBox1_MouseDown - Gets the line and column numbers of the cursor position in the RTB when the mouse clicks an area *
         //****************************************************************************************************************************
-        private void richTextBox1_MouseDown(object sender, MouseEventArgs e)
-        {
-            int pos = richTextBox1.SelectionStart;    // get starting point
-            int line = richTextBox1.GetLineFromCharIndex(pos);    // get line number
-            int column = richTextBox1.SelectionStart - richTextBox1.GetFirstCharIndexFromLine(line);    // get column number
-        }
 
         int previousScrollPos = 0;
         private void richTextBox1_VScroll(object sender, EventArgs e)
@@ -541,8 +544,8 @@ namespace Text_Editor
 
         private void pictureBoxLeftS_Click(object sender, EventArgs e)
         {
-            customMenuStripRow.Show(Parent.Location.X + pictureBoxLeftS.Location.X - 180,
-              Parent.Location.Y +  pictureBoxLeftS.Location.Y + 40);
+            var p = PointToScreen(pictureBoxLeftS.Location);
+            customMenuStripRow.Show(p.X - 200, p.Y );
         }
     }
 }
